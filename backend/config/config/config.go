@@ -1,0 +1,50 @@
+package config
+
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
+
+type Config struct {
+	Server struct {
+		Port string `yaml:"port"`
+		Host string `yaml:"host"`
+	}
+
+	Database struct {
+		Host string `yaml:"db_host"`
+		Port string `yaml:"db_port"`
+		User string `yaml:"user"`
+		Pass string `yaml:"pass"`
+		Name string `yaml:"name"`
+	}
+
+	JWT struct {
+		Secret   string `yaml:"secret"`
+		Lifespan string `yaml:"token_lifaspan"`
+	}
+}
+
+func Load() (*Config, error) {
+	if err := godotenv.Load(); err != nil {
+		log.Println("Warning: .env file not found, using system environment variables")
+	}
+
+	var config Config
+
+	config.Server.Port = os.Getenv("PORT")
+	config.Server.Host = os.Getenv("SERVER_HOST")
+
+	config.Database.Host = os.Getenv("DB_HOST")
+	config.Database.Port = os.Getenv("DB_PORT")
+	config.Database.User = os.Getenv("DB_USER")
+	config.Database.Pass = os.Getenv("DB_PASS")
+	config.Database.Name = os.Getenv("DB_NAME")
+
+	config.JWT.Secret = os.Getenv("JWT_SECRET")
+	config.JWT.Lifespan = os.Getenv("JWT_TOKEN_LIFESPAN")
+
+	return &config, nil
+}

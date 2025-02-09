@@ -1,0 +1,16 @@
+env: "local"
+
+database:
+  db_host: "${DB_HOST}"
+  db_port: "${DB_PORT}"
+  user: "${DB_USER}"
+  pass: "${DB_PASS}"
+  name: ${DB_NAME}
+
+server:
+  port: "${SERVER_PORT}"
+  host: "${SERVER_HOST}"
+
+jwt:
+  secret: "${JWT_SECRET}"
+  token_lifaspan: "${JWT_TOKEN_LIFESPAN}"
