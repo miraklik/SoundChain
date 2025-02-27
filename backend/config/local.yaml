@@ -14,3 +14,9 @@ server:
 jwt:
   secret: "${JWT_SECRET}"
   token_lifaspan: "${JWT_TOKEN_LIFESPAN}"
+
+email:
+  smtp_HOST: "${SMTP_HOST}"
+  smtp_PORT: "${SMTP_PORT}"
+  username:  "${SMTP_USER}"
+  password:  "${SMTP_PASS}"

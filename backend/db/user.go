@@ -12,6 +12,7 @@ import (
 
 type User struct {
 	gorm.Model
+	Email    string `gorm:"size:255;not null; unique"`
 	Username string `gorm:"size:255;not null; unique"`
 	Password string `gorm:"size:255;not null"`
 }
@@ -26,7 +27,9 @@ func GetUserById(uid uint) (User, error) {
 	}
 
 	if err := db.Preload("Groceries").Where("id=?", uid).Find(&user).Error; err != nil {
-		return user, errors.New("user not found")
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return User{}, errors.New("song not found")
+		}
 
 	}
 

@@ -1,0 +1,8 @@
+CREATE TABLE song (
+    ID BIGSERIAL PRIMARY KEY,
+    NameSong VARCHAR(255) NOT NULL,
+    Artist VARCHAR(255) NOT NULL,
+    Image VARCHAR(255) NOT NULL,
+);
+
+CREATE INDEX name_song_idx ON song (NameSong);

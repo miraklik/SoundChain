@@ -24,7 +24,7 @@ func ConnectDB() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	if err := db.AutoMigrate(&User{}); err != nil {
+	if err := db.AutoMigrate(&User{}, &Song{}); err != nil {
 		log.Printf("Failed to migrate database: %v", err)
 		return nil, err
 	}

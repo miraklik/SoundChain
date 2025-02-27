@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
+	"soundchain/config/config"
 	"soundchain/db"
 	"soundchain/utils"
 
@@ -11,6 +13,7 @@ import (
 )
 
 type RegisterUser struct {
+	Email           string `json:"email"`
 	Username        string `json:"username"`
 	Password        string `json:"password"`
 	PasswordConfirm string `json:"passwordConfirm"`
@@ -32,21 +35,32 @@ func NewServer(db *gorm.DB) *Server {
 func (s *Server) RegisterUser(c *gin.Context) {
 	var Input RegisterUser
 
+	cfg, err := config.Load()
+	if err != nil {
+		log.Printf("Failed to load config: %v", err)
+		return
+	}
+
 	if err := c.ShouldBindJSON(&Input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user := db.User{Username: Input.Username, Password: Input.Password}
+	user := db.User{Email: Input.Email, Username: Input.Username, Password: Input.Password}
 	user.HashedPassword()
 
-	if user.Username == "" || user.Password == "" {
+	if user.Email == "" || user.Username == "" || user.Password == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "username and password are required"})
 		return
 	}
 
 	if Input.Password != Input.PasswordConfirm {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "passwords do not match"})
+		return
+	}
+
+	if err := utils.SendEmail(cfg.Email.SmtpUser, user.Email); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

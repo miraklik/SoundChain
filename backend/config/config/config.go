@@ -25,6 +25,13 @@ type Config struct {
 		Secret   string `yaml:"secret"`
 		Lifespan string `yaml:"token_lifaspan"`
 	}
+
+	Email struct {
+		SmtpHOST string `yaml:"smtp_host"`
+		SmtpPort string `yaml:"smtp_port"`
+		SmtpUser string `yaml:"smtp_user"`
+		SmtpPass string `yaml:"smtp_pass"`
+	}
 }
 
 func Load() (*Config, error) {
@@ -45,6 +52,11 @@ func Load() (*Config, error) {
 
 	config.JWT.Secret = os.Getenv("JWT_SECRET")
 	config.JWT.Lifespan = os.Getenv("JWT_TOKEN_LIFESPAN")
+
+	config.Email.SmtpHOST = os.Getenv("SMTP_HOST")
+	config.Email.SmtpPort = os.Getenv("SMTP_PORT")
+	config.Email.SmtpUser = os.Getenv("SMTP_USER")
+	config.Email.SmtpPass = os.Getenv("SMTP_PASS")
 
 	return &config, nil
 }
