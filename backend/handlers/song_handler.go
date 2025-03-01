@@ -9,6 +9,7 @@ import (
 	"soundchain/db"
 	"soundchain/repository"
 	"soundchain/utils"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -162,6 +163,16 @@ func UploadImage(c *gin.Context) {
 
 	bucket := cfg.AWS.Bucket
 	key := fmt.Sprintf("images/%s", file.Filename)
+
+	if file.Size > 5*1024*1024 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Image too large"})
+		return
+	}
+
+	if !strings.HasPrefix(file.Header.Get("Content-Type"), "image/") {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Only images are allowed"})
+		return
+	}
 
 	err = utils.UploadImage(bucket, key, data)
 	if err != nil {
