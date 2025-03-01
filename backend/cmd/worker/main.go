@@ -28,9 +28,11 @@ func main() {
 	r := gin.Default()
 
 	r.POST("/Create", handlers.CreateSong())
-	/*r.GET("/songs", handlers.GetAllSongs)
-	r.GET("/song/:id", handlers.GetSongById)
-	r.GET("/artist/:artist", handlers.GetSongByArtist)*/
+	r.GET("/songs", handlers.GetAllSongs())
+	r.POST("/upload", handlers.UploadImage)
+	// TODO: add get song by id
+	// r.GET("/song/:id", handlers.GetSongById())
+	r.GET("/artist/:artist", handlers.GetSongByArtist())
 	r.PUT("/update", handlers.UpdateSong())
 	r.DELETE("/delete", handlers.DeleteSong())
 

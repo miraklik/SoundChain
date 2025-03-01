@@ -1,9 +1,14 @@
 package handlers
 
 import (
+	"fmt"
+	"io"
+	"log"
 	"net/http"
+	"soundchain/config/config"
 	"soundchain/db"
 	"soundchain/repository"
+	"soundchain/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,19 +22,18 @@ func CreateSong() gin.HandlerFunc {
 		var req struct {
 			NameSong string `json:"name_song"`
 			Artist   string `json:"artist"`
-			Image    string `json:"image"`
 		}
 
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
 
-		if req.NameSong == "" || req.Artist == "" || req.Image == "" {
+		if req.NameSong == "" || req.Artist == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "name_song, artist, and image are required"})
 			return
 		}
 
-		song, err := SongRepository.SaveSong(&db.Song{NameSong: req.NameSong, Artist: req.Artist, Image: req.Image})
+		song, err := SongRepository.SaveSong(&db.Song{NameSong: req.NameSong, Artist: req.Artist})
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -116,4 +120,60 @@ func GetSongByArtist() gin.HandlerFunc {
 			return
 		}
 	}
+}
+
+func UploadImage(c *gin.Context) {
+	cfg, err := config.Load()
+	if err != nil {
+		log.Printf("Failed to load config: %v", err)
+		return
+	}
+
+	database, err := db.ConnectDB()
+	if err != nil {
+		log.Printf("Failed to connect to database: %v", err)
+		return
+	}
+
+	token := c.GetHeader("Authorization")
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No image uploaded:" + err.Error()})
+		return
+	}
+
+	src, err := file.Open()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to open file" + err.Error()})
+		return
+	}
+	defer src.Close()
+
+	data, err := io.ReadAll(src)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read file" + err.Error()})
+		return
+	}
+
+	bucket := cfg.AWS.Bucket
+	key := fmt.Sprintf("images/%s", file.Filename)
+
+	err = utils.UploadImage(bucket, key, data)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to upload image" + err.Error()})
+		return
+	}
+
+	if err := database.Create(&db.Song{Image: key}).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to save image" + err.Error()})
+		return
+	}
+
+	url := fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucket, key)
+	c.JSON(http.StatusOK, gin.H{"message": "Image uploaded successfully", "url": url})
 }

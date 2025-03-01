@@ -6,6 +6,12 @@ import (
 	"log"
 	"net/smtp"
 	"soundchain/config/config"
+
+	"golang.org/x/exp/rand"
+)
+
+const (
+	length = 6
 )
 
 func SendEmail(fromEmail, toEmail string) error {
@@ -32,4 +38,13 @@ func SendEmail(fromEmail, toEmail string) error {
 	}
 
 	return nil
+}
+
+func GenerateRandomString() string {
+	chars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	result := make([]byte, length)
+	for i := range result {
+		result[i] = chars[rand.Intn(len(chars))]
+	}
+	return string(result)
 }

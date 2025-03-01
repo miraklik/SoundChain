@@ -5,7 +5,7 @@ database:
   db_port: "${DB_PORT}"
   user: "${DB_USER}"
   pass: "${DB_PASS}"
-  name: ${DB_NAME}
+  name: "${DB_NAME}"
 
 server:
   port: "${SERVER_PORT}"
@@ -13,10 +13,13 @@ server:
 
 jwt:
   secret: "${JWT_SECRET}"
-  token_lifaspan: "${JWT_TOKEN_LIFESPAN}"
+  token_lifespan: "${JWT_TOKEN_LIFESPAN}"
 
 email:
   smtp_HOST: "${SMTP_HOST}"
   smtp_PORT: "${SMTP_PORT}"
-  username:  "${SMTP_USER}"
-  password:  "${SMTP_PASS}"
+  username: "${SMTP_USER}"
+  password: "${SMTP_PASS}"
+
+aws:
+  bucket: "${BUCKET}"

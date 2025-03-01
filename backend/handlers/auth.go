@@ -34,7 +34,6 @@ func NewServer(db *gorm.DB) *Server {
 
 func (s *Server) RegisterUser(c *gin.Context) {
 	var Input RegisterUser
-
 	cfg, err := config.Load()
 	if err != nil {
 		log.Printf("Failed to load config: %v", err)
@@ -98,7 +97,6 @@ func (s *Server) LoginUser(c *gin.Context) {
 
 func (s *Server) LoginCheck(username, password string) (string, error) {
 	var err error
-
 	user := db.User{}
 
 	if err = s.db.Model(db.User{}).Where("username=?", username).Take(&user).Error; err != nil {

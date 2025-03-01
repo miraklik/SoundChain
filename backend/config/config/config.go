@@ -32,6 +32,10 @@ type Config struct {
 		SmtpUser string `yaml:"smtp_user"`
 		SmtpPass string `yaml:"smtp_pass"`
 	}
+
+	AWS struct {
+		Bucket string `yaml:"bucket"`
+	}
 }
 
 func Load() (*Config, error) {
@@ -57,6 +61,8 @@ func Load() (*Config, error) {
 	config.Email.SmtpPort = os.Getenv("SMTP_PORT")
 	config.Email.SmtpUser = os.Getenv("SMTP_USER")
 	config.Email.SmtpPass = os.Getenv("SMTP_PASS")
+
+	config.AWS.Bucket = os.Getenv("BUCKET")
 
 	return &config, nil
 }
