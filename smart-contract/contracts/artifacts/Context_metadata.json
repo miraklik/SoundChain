@@ -1,0 +1,46 @@
+{
+	"compiler": {
+		"version": "0.8.28+commit.7893614a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"details": "Provides information about the current execution context, including the sender of the transaction and its data. While these are generally available via msg.sender and msg.data, they should not be accessed in such a direct manner, since when dealing with meta-transactions the account sending and paying for execution may not be the actual sender (as far as an application is concerned). This contract is only required for intermediate, library-like contracts.",
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/mem_flattened.sol": "Context"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/mem_flattened.sol": {
+			"keccak256": "0xbc20608cfabaf01b4942a0c806f699ebc15fc8c4017219f70a228dea538e50e8",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://543380bec711fa850f5208f9bed02697c8167dc0d4d6ceac21b2f0b84726e709",
+				"dweb:/ipfs/QmSNQaRcYBbCBdRNSeYtvQLxQPtMBTRk45HzRk2k8Z1gJ1"
+			]
+		}
+	},
+	"version": 1
+}
