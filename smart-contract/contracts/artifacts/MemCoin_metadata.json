@@ -21,6 +21,11 @@
 						"internalType": "address",
 						"name": "routerAddress",
 						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -238,6 +243,25 @@
 					}
 				],
 				"name": "TaxCollected",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensMinted",
 				"type": "event"
 			},
 			{
@@ -885,11 +909,11 @@
 			]
 		},
 		"contracts/mem.sol": {
-			"keccak256": "0x54e6b67cdbb42934adde48dc05d2480d4db31f83b076460f313f958bb356cdee",
+			"keccak256": "0xb9d18491c9264d311ee34fddb76f370fafc272c9afc8e2d000e24ade21c569bc",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9e45bb201d3353c6cb09a873f514e8544de05c6625d4b11f3c79b4258dcf7b81",
-				"dweb:/ipfs/QmTMbVmg7RjiTp4AioX6hj2sJw3MuX51jhgLY7YM7GDJt9"
+				"bzz-raw://f40874fefbbd4ea745fd54d014f0b0feec62d76880b5f4c15db0c713c7d2a8f8",
+				"dweb:/ipfs/QmXTVXFjsmftCbzKP26ne2eirNdhwWPycMazF4HaL6ZjBB"
 			]
 		}
 	},

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+
 // File: .deps/npm/@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router01.sol
 
 pragma solidity >=0.6.2;
@@ -887,11 +887,7 @@ abstract contract ERC20 is Context, IERC20, IERC20Metadata, IERC20Errors {
 // File: contracts/mem.sol
 
 
-pragma solidity ^0.8.28;
-
-
-
-
+pragma solidity ^0.8.28;
 
 contract MemCoin is ERC20, Ownable {
     error TransferFromZero();
@@ -915,19 +911,19 @@ contract MemCoin is ERC20, Ownable {
 
     event TaxCollected(uint256 amount);
     event LiquidityAdded(uint256 tokens, uint256 eth);
+    event TokensMinted(address indexed to, uint256 amount);
 
     constructor(
         string memory _name, 
         string memory _symbol, 
-        address routerAddress
-    ) ERC20(_name, _symbol) Ownable(msg.sender) {
+        address routerAddress,
+        address owner
+    ) ERC20(_name, _symbol) Ownable(owner) {
         uniswaprouter = IUniswapV2Router02(routerAddress);
         uniswapPair = IUniswapV2Factory(uniswaprouter.factory()).createPair(address(this), uniswaprouter.WETH());
 
-        isExcludedFromTax[msg.sender] = true;
+        isExcludedFromTax[owner] = true;
         isExcludedFromTax[address(this)] = true;
-
-        _mint(msg.sender, 1_000_000_000 * 10**decimals());
     }
 
     function transfer(address sender, address recipient, uint256 amount) external{
@@ -956,17 +952,24 @@ contract MemCoin is ERC20, Ownable {
             super._transfer(sender, address(this), taxAmount);
             emit TaxCollected(taxAmount);
 
-           //uint256 liquidityTokens = (taxAmount * liquidityShare) / 100;
+            uint256 liquidityTokens = (taxAmount * liquidityShare) / 100;
             uint256 burnTokens = (taxAmount * burnShare) / 100;
-            //uint256 rewardsTokens = taxAmount - liquidityTokens - burnTokens;
+            uint256 rewardsTokens = taxAmount - liquidityTokens - burnTokens;
 
-            if (burnTokens > 0) {
-                super._burn(address(this), burnTokens);
-            }
+            super._transfer(address(this), uniswapPair, liquidityTokens);
+            
+            super._burn(address(this), burnTokens);
+
+            super._transfer(address(this), owner(), rewardsTokens);
         }
 
         super._transfer(sender, recipient, netAmount);
     }
+
+    function _update(address sender, address recipient, uint256 amount) internal virtual override {
+        super._update(sender, recipient, amount);
+    }
+
 
     function addLiquidity(uint256 tokenAmount) external onlyOwner {
         require(tokenAmount > 0, TokenAmountMustBePositive());
@@ -985,9 +988,12 @@ contract MemCoin is ERC20, Ownable {
         emit LiquidityAdded(tokenAmount, address(this).balance);
     }
 
+
+
+
     function withdraw(uint256 amount) external onlyOwner {
         require(msg.sender != address(0), TransferToZero());
-        require(amount > address(this).balance, InsufficientFunds());
+        require(amount <= address(this).balance, InsufficientFunds());
 
         uint256 balance = address(this).balance;
 
