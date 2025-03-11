@@ -36,6 +36,13 @@ type Config struct {
 	AWS struct {
 		Bucket string `yaml:"bucket"`
 	}
+
+	Blockchain struct {
+		RPC_URL            string `yaml:"rpc_url"`
+		MemcoinAddr        string `yaml:"memcoin_addr"`
+		MemcoinFactoryAddr string `yaml:"memcoin_factory_addr"`
+		PrivateKey         string `yaml:"private_key"`
+	}
 }
 
 func Load() (*Config, error) {
@@ -63,6 +70,11 @@ func Load() (*Config, error) {
 	config.Email.SmtpPass = os.Getenv("SMTP_PASS")
 
 	config.AWS.Bucket = os.Getenv("BUCKET")
+
+	config.Blockchain.RPC_URL = os.Getenv("RPC_URL")
+	config.Blockchain.MemcoinAddr = os.Getenv("MEMCOIN_ADDR")
+	config.Blockchain.MemcoinFactoryAddr = os.Getenv("MEMCOIN_FACTORY_ADDR")
+	config.Blockchain.PrivateKey = os.Getenv("PRIVATE_KEY")
 
 	return &config, nil
 }

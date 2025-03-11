@@ -23,3 +23,9 @@ email:
 
 aws:
   bucket: "${BUCKET}"
+
+blockchain:
+  rpc_url: "${RPC_URL}"
+  memcoin_addr: "${MEMCOINADDR}"
+  memcoin_factory_addr: "${MEMCOIN_FACTORY_ADDR}"
+  private_key: "${PRIVATE_KEY}"
