@@ -970,7 +970,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/mem_flattened.sol": "IUniswapV2Router02"
+			"contracts/memcoinFactory_flattened.sol": "IUniswapV2Router02"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -984,12 +984,11 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/mem_flattened.sol": {
-			"keccak256": "0xbc20608cfabaf01b4942a0c806f699ebc15fc8c4017219f70a228dea538e50e8",
-			"license": "UNLICENSED",
+		"contracts/memcoinFactory_flattened.sol": {
+			"keccak256": "0xca04723b9be3120bb9cd8a970415c33af7a8a9d8ca4e690c8a5c23b7e0307a7d",
 			"urls": [
-				"bzz-raw://543380bec711fa850f5208f9bed02697c8167dc0d4d6ceac21b2f0b84726e709",
-				"dweb:/ipfs/QmSNQaRcYBbCBdRNSeYtvQLxQPtMBTRk45HzRk2k8Z1gJ1"
+				"bzz-raw://2913c8f8fba7bea914efc8a9de07194dd21bf00a2d42eb64aaf9ea539608c235",
+				"dweb:/ipfs/QmPnu6CHhuZtUfuph6Bbaj6TRHkttf2fkCnUendEpjjG9T"
 			]
 		}
 	},
