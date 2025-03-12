@@ -32,19 +32,22 @@ func main() {
 
 	server := handlers.NewServer(db)
 	songRespository := repository.NewSong(db)
-	handlers.SongRepository = songRespository
-
+	handler := handlers.SongHandler{SongRepository: songRespository}
 	router := r.Group("/api")
 
 	router.POST("/register", server.RegisterUser)
 	router.POST("/login", server.LoginUser)
 
-	r.POST("/create-song", handlers.CreateSong())
-	r.GET("/songs", handlers.GetAllSongs())
+	r.POST("/create-song", handler.CreateSong())
+	r.GET("/songs", handler.GetAllSongs())
 	r.POST("/upload", handlers.UploadImage)
-	r.GET("/artist/:artist", handlers.GetSongByArtist())
-	r.PUT("/update", handlers.UpdateSong())
-	r.DELETE("/delete", handlers.DeleteSong())
+	r.GET("/artist/:artist", handler.GetSongByArtist())
+	r.PUT("/update", handler.UpdateSong())
+	r.DELETE("/delete", handler.DeleteSong())
+	r.POST("/create-album", handler.CreateAlbum())
+	r.GET("/albums", handler.GetAllAlbums())
+	r.GET("/album/:name", handler.GetAlbumByName())
+	r.DELETE("/delete-album", handler.DeleteAlbum())
 
 	r.POST("/create-token", handlers.CreateToken())
 

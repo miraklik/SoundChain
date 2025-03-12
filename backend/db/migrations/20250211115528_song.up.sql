@@ -1,8 +1,9 @@
-CREATE TABLE song (
+CREATE TABLE songs (
     ID BIGSERIAL PRIMARY KEY,
     NameSong VARCHAR(255) NOT NULL,
     Artist VARCHAR(255) NOT NULL,
-    Image VARCHAR(255) NOT NULL,
+    AlbumID BIGINT REFERENCES albums(ID) ON DELETE CASCADE,
+    Image VARCHAR(255) NOT NULL
 );
 
-CREATE INDEX name_song_idx ON song (NameSong);
+CREATE INDEX name_songs_idx ON songs (NameSong);
