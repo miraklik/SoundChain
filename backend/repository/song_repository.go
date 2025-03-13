@@ -130,6 +130,25 @@ func (sr *SongRepository) CreateAlbum(album *db.Album) (*db.Album, error) {
 	return album, nil
 }
 
+func (sr *SongRepository) UpdateAlbum(album *db.Album) (*db.Album, error) {
+	if err := sr.DB.First(&album, album.ID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			logger.Warn("Failed to update album:", zap.Uint("album_id", album.ID))
+			return nil, fmt.Errorf("failed to update album: %v", err)
+		}
+
+		logger.Error("Failed to update album:", zap.Error(err))
+		return nil, err
+	}
+
+	if err := sr.DB.Model(&db.Album{}).Where("id=?", album.ID).Updates(album).Error; err != nil {
+		logger.Error("Failed to update album:", zap.Error(err))
+		return nil, fmt.Errorf("failed to update album: %v", err)
+	}
+
+	return album, nil
+}
+
 func (sr *SongRepository) GetAlbumByID(id uint) (*db.Album, error) {
 	var album db.Album
 	if err := sr.DB.Preload("Songs").First(&album, id).Error; err != nil {

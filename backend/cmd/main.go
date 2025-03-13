@@ -42,10 +42,11 @@ func main() {
 	r.GET("/songs", handler.GetAllSongs())
 	r.POST("/upload", handlers.UploadImage)
 	r.GET("/artist/:artist", handler.GetSongByArtist())
-	r.PUT("/update", handler.UpdateSong())
+	r.PUT("/update-song", handler.UpdateSong())
 	r.DELETE("/delete", handler.DeleteSong())
 	r.POST("/create-album", handler.CreateAlbum())
 	r.GET("/albums", handler.GetAllAlbums())
+	r.POST("/update-album", handler.UpdateAlbum())
 	r.GET("/album/:name", handler.GetAlbumByName())
 	r.DELETE("/delete-album", handler.DeleteAlbum())
 

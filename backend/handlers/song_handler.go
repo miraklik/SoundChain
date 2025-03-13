@@ -159,6 +159,34 @@ func (sh *SongHandler) CreateAlbum() gin.HandlerFunc {
 	}
 }
 
+func (sh *SongHandler) UpdateAlbum() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req struct {
+			Title  string `json:"title"`
+			Artist string `json:"artist"`
+			Image  string `json:"image"`
+		}
+
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if req.Title == "" || req.Artist == "" || req.Image == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "title, artist, and image are required"})
+			return
+		}
+
+		album, err := sh.SongRepository.UpdateAlbum(&db.Album{Title: req.Title, Artist: req.Artist, ImageURL: req.Image})
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"album": album})
+	}
+}
+
 func (sh *SongHandler) GetAllAlbums() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		albums, err := sh.SongRepository.GetAllAlbums()
