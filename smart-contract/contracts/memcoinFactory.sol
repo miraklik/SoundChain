@@ -2,9 +2,10 @@
 pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "./mem.sol";
 
-contract MemCoinFactory is Ownable {
+contract MemCoinFactory is Ownable, ReentrancyGuard, Pausable {
     event MemCoinCreated(address indexed tokenAddress, address indexed artist);
 
     address public routerAddress;
@@ -31,5 +32,13 @@ contract MemCoinFactory is Ownable {
 
     function getAllTokens() external view returns (address[] memory) {
         return allTokens;
+    }
+
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    function unpause() external onlyOwner {
+        _unpause();
     }
 }

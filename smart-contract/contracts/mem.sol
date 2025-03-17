@@ -3,10 +3,12 @@ pragma solidity ^0.8.28;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "../.deps/npm/@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "../.deps/npm/@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 
-contract MemCoin is ERC20, Ownable {
+contract MemCoin is ERC20, Ownable, ReentrancyGuard, Pausable {
     error TransferFromZero();
     error TransferToZero();
     error ArithmeticError();
@@ -88,7 +90,7 @@ contract MemCoin is ERC20, Ownable {
     }
 
 
-    function addLiquidity(uint256 tokenAmount) external onlyOwner {
+    function addLiquidity(uint256 tokenAmount) external onlyOwner nonReentrant {
         require(tokenAmount > 0, TokenAmountMustBePositive());
 
         _approve(address(this), address(uniswaprouter), tokenAmount);
@@ -105,7 +107,7 @@ contract MemCoin is ERC20, Ownable {
         emit LiquidityAdded(tokenAmount, address(this).balance);
     }
 
-    function withdraw(uint256 amount) external onlyOwner {
+    function withdraw(uint256 amount) external onlyOwner nonReentrant {
         require(msg.sender != address(0), TransferToZero());
         require(amount <= address(this).balance, InsufficientFunds());
 
@@ -126,5 +128,13 @@ contract MemCoin is ERC20, Ownable {
         require(_buyTax <= 10 && _sellTax <= 20, TaxTooHigh());
         buyTax = _buyTax;
         sellTax = _sellTax;
+    }
+
+    function pause() external onlyOwner {
+        _pause();   
+    }
+
+    function unpause() external onlyOwner {
+        _unpause();
     }
 }
