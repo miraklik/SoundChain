@@ -5,6 +5,7 @@ import (
 	"soundchain/config/config"
 	"soundchain/db"
 	"soundchain/handlers"
+	"soundchain/middleware"
 	"soundchain/repository"
 
 	"github.com/gin-gonic/gin"
@@ -32,26 +33,30 @@ func main() {
 
 	server := handlers.NewServer(db)
 	songRespository := repository.NewSong(db)
-	handler := handlers.SongHandler{SongRepository: songRespository}
+	SongHandler := handlers.SongHandler{SongRepository: songRespository}
 	router := r.Group("/api")
 
 	router.POST("/register", server.RegisterUser)
 	router.POST("/login", server.LoginUser)
 
-	r.POST("/create-song", handler.CreateSong())
-	r.GET("/songs", handler.GetAllSongs())
-	r.POST("/upload", handlers.UploadImage)
-	r.GET("/artist/:artist", handler.GetSongByArtist())
-	r.PUT("/update-song", handler.UpdateSong())
-	r.DELETE("/delete", handler.DeleteSong())
-	r.POST("/create-album", handler.CreateAlbum())
-	r.GET("/albums", handler.GetAllAlbums())
-	r.POST("/update-album", handler.UpdateAlbum())
-	r.GET("/album/:name", handler.GetAlbumByName())
-	r.DELETE("/delete-album", handler.DeleteAlbum())
+	auth := router.Group("/")
+	auth.Use(middleware.JwtAuthMiddleware())
+	{
+		auth.POST("/songs", SongHandler.CreateSong())
+		auth.GET("/songs", SongHandler.GetAllSongs())
+		auth.POST("/upload", handlers.UploadImage)
+		auth.GET("/artist/:artist", SongHandler.GetSongByArtist())
+		auth.PUT("/song/:id", SongHandler.UpdateSong())
+		auth.DELETE("/song/:id", SongHandler.DeleteSong())
 
-	r.POST("/create-token", handlers.CreateToken())
+		auth.POST("/create-album", SongHandler.CreateAlbum())
+		auth.GET("/albums", SongHandler.GetAllAlbums())
+		auth.PUT("/album/:id", SongHandler.UpdateAlbum())
+		auth.GET("/album/:name", SongHandler.GetAlbumByName())
+		auth.DELETE("/album/id", SongHandler.DeleteAlbum())
 
+		auth.POST("/create-token", handlers.CreateToken())
+	}
 	if err := r.Run(":" + cfg.Server.Port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
