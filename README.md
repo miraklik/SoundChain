@@ -26,6 +26,8 @@
 ---
 
 ## 📁 Project Structure
+
+```
 SoundChain/
 ├── backend/ # Go backend services
 ├── smart-contract/ # Solidity smart contracts
@@ -33,6 +35,7 @@ SoundChain/
 ├── .github/ # GitHub workflows
 ├── README.md # Project documentation
 └── Dockerfile # Docker configuration
+```
 
 ## 📦 Installation & Setup
 
